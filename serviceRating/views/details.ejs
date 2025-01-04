@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= restaurant.name %> - Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        strong {
+            color: #333;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .restaurant-details {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .ratings {
+            list-style-type: none;
+            padding: 0;
+        }
+        .ratings li {
+            background-color: #e9f7ef;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 5px solid #4caf50; /* Green color */
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-link:hover {
+            background-color: #0056b3;
+        }
+        .comments {
+            list-style-type: none;
+            padding: 0;
+        }
+        .comments li {
+            background-color: #f4f4f4;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .comments li small {
+            font-style: italic;
+            color: #888;
+        }
+        form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        form input, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        .comment-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .like-section {
+            display: flex;
+            align-items: center;
+        }
+        .like-section p {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-container">
+        <% if (restaurant.image) { %>
+            <img src="<%= restaurant.image %>" alt="<%= restaurant.name %>">
+        <% } else { %>
+            <p>No image available</p>
+        <% } %>
+    </div>
+
+    <div class="restaurant-details">
+        <h1><%= restaurant.name %></h1>
+        <p><strong>Address:</strong> <%= restaurant.address %></p>
+        <p><strong>Cuisine:</strong> <%= restaurant.cuisine %></p>
+        <p><strong>Phone:</strong> <%= restaurant.phone %></p>
+        <p><strong>Opening Hours:</strong> <%= restaurant.openingHours %></p>
+        <p><strong>Rating:</strong> <%= restaurant.rating %> / 5</p>
+    </div>
+    
+    <h2>Ratings</h2>
+    <ul class="ratings">
+        <% if (restaurant.ratings && restaurant.ratings.length > 0) { %>
+            <% restaurant.ratings.forEach(rating => { %>
+                <li><%= rating %></li>
+            <% }); %>
+        <% } else { %>
+            <li>No ratings yet.</li>
+        <% } %>
+    </ul>
+
+    <!-- Add a comment form -->
+    <div class="comment-section">
+        <form action="/restaurants/<%= restaurant._id %>/comment" method="POST">
+            <input type="text" name="username" placeholder="Your name" required>
+            <textarea name="comment" placeholder="Write your comment..." required></textarea>
+            <button type="submit">Submit Comment</button>
+        </form>
+        
+        <div class="like-section">
+            <p><strong>Likes:</strong> <%= restaurant.likes %></p>
+            <form action="/restaurants/<%= restaurant._id %>/like" method="POST">
+                <button type="submit">Like</button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

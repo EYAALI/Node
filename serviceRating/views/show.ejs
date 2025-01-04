@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= restaurant.name %></title>
+</head>
+<body>
+  <h1><%= restaurant.name %></h1>
+  <p>Address: <%= restaurant.address %></p>
+  <p>Cuisine: <%= restaurant.cuisine %></p>
+  <p>Average Rating: <%= restaurant.getAverageRating().toFixed(1) %> / 5</p>
+  
+  <h3>Submit a Rating</h3>
+  <form action="/restaurants/<%= restaurant._id %>/rate" method="POST">
+    <label for="rating">Rate (1-5):</label>
+    <input type="number" name="rating" min="1" max="5" required>
+    <button type="submit">Submit Rating</button>
+  </form>
+</body>
+</html>

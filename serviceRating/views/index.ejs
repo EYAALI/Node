@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+        }
+        p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .stars {
+            display: inline-block;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #FFD700; /* Gold color */
+        }
+        .stars .star {
+            color: #ccc; /* Grey color for unselected stars */
+        }
+        .stars .star.filled {
+            color: #FFD700; /* Gold for filled stars */
+        }
+        form {
+            display: none; /* Hide the form initially */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Restaurants</h1>
+<a href="/restaurants/new">Add New Restaurant</a>
+
+<ul>
+<% restaurants.forEach(restaurant => { %>
+    <li>
+        <h2>
+            <a href="/restaurants/<%= restaurant._id %>"><%= restaurant.name %></a>
+        </h2>
+        <p>Address: <%= restaurant.address %></p>
+        <p>Cuisine: <%= restaurant.cuisine %></p>
+        <p>
+            Rating:
+            <span class="stars" data-restaurant-id="<%= restaurant._id %>">
+                <% const averageRating = restaurant.getAverageRating(); %>
+                <% for (let i = 1; i <= 5; i++) { %>
+                    <span class="star <%= i <= averageRating ? 'filled' : '' %>" data-rating="<%= i %>">&#9733;</span>
+                <% } %>
+            </span>
+            (<%= averageRating.toFixed(1) %>/5)
+        </p>
+        <form action="/restaurants/<%= restaurant._id %>/rate" method="POST" class="rating-form">
+            <input type="hidden" name="rating" class="rating-input" value="">
+            <button type="submit">Submit Rating</button>
+        </form>
+        <a href="/restaurants/<%= restaurant._id %>/edit">Edit</a>
+        <form action="/restaurants/<%= restaurant._id %>/delete" method="POST" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+<% }) %>
+</ul>
+
+<script>
+    document.querySelectorAll('.stars').forEach(starContainer => {
+        starContainer.addEventListener('click', (event) => {
+            const stars = starContainer.querySelectorAll('.star');
+            let rating = 0;
+
+            stars.forEach(star => {
+                if (star === event.target || star.contains(event.target)) {
+                    rating = star.getAttribute('data-rating');
+                }
+                star.classList.remove('filled');
+            });
+
+            // Fill the stars up to the selected rating
+            for (let i = 1; i <= rating; i++) {
+                stars[i - 1].classList.add('filled');
+            }
+
+            // Find the corresponding form and set the rating value
+            const form = starContainer.closest('li').querySelector('.rating-form');
+            const ratingInput = form.querySelector('.rating-input');
+            ratingInput.value = rating;
+
+            // Show the form to submit the rating
+            form.style.display = 'inline';
+        });
+    });
+</script>
+
+</body>
+</html>
